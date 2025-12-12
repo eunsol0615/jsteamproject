@@ -130,7 +130,8 @@ app.delete('/api/posts/:id', (req, res) => {
     });
 });
 
-// 서버 시작
-app.listen(port, () => {
-    console.log(`서버가 http://localhost:${port} 에서 실행 중입니다.`);
+// ✅ 포트 번호만 적거나, '0.0.0.0'을 명시해야 합니다.
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
