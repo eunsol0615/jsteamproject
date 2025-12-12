@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html class="light" lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>콘텐츠융합디자인학부 포트폴리오</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        html { scroll-behavior: smooth; }
+        /* 모달 애니메이션 */
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-enter-active { opacity: 1; transform: scale(100%); transition: opacity 300ms ease-out, transform 300ms ease-out; }
+        .modal-exit { opacity: 1; transform: scale(100%); }
+        .modal-exit-active { opacity: 0; transform: scale(0.95); transition: opacity 200ms ease-in, transform 200ms ease-in; }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: { "display": ["Lexend", "sans-serif"] },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#0d141b] dark:text-slate-50">
+    <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+        
+        <header class="sticky top-0 z-40 flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-4 py-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+            <div class="flex items-center gap-8">
+                <a href="index.html" class="flex items-center gap-3 text-primary hover:opacity-80 transition-opacity">
+                    <div class="size-6">
+                        <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-lg font-bold leading-tight tracking-[-0.015em] text-[#0d141b] dark:text-slate-50">포트폴리오 플랫폼</h2>
+                </a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a class="text-sm font-medium leading-normal text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="기계.html">기계제어공학부</a>
+                    <a class="text-sm font-medium leading-normal text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="디자인.html">콘텐츠융합디자인학부</a>
+                </nav>
+            </div>
+            <div class="flex flex-1 justify-end gap-4">
+                <label class="flex-col min-w-40 !h-10 max-w-64 hidden lg:flex">
+                    <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                        <div class="text-slate-500 dark:text-slate-400 flex border-none bg-slate-200 dark:bg-slate-800 items-center justify-center pl-3 rounded-l-lg border-r-0">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">search</span>
+                        </div>
+                        <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg focus:outline-0 focus:ring-0 border-none bg-slate-200 dark:bg-slate-800 h-full placeholder:text-slate-500 dark:placeholder:text-slate-400 px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="검색" value=""/>
+                    </div>
+                </label>
+                <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-slate-50 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+                    <span class="truncate">로그인 / 회원가입</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 w-full max-w-screen-2xl mx-auto px-4 md:px-8 py-8">
+            
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-end gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
+                <div>
+                    <h1 class="text-4xl font-black tracking-tight text-slate-900 dark:text-slate-50 mb-2">콘텐츠융합디자인학부</h1>
+                    <p class="text-slate-600 dark:text-slate-400 max-w-2xl text-lg">
+                        시각 디자인, UI/UX, 영상 예술 등 창의적인 학생들의 작품을 만나보세요.<br>
+                        감각적인 비주얼과 혁신적인 사용자 경험을 선사합니다.
+                    </p>
+                </div>
+                <div class="flex items-center gap-4">
+                    
+                </div>
+            </div>
+
+            <div class="sticky top-[73px] z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur py-4 mb-6 border-b border-slate-200/50 dark:border-slate-800/50">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex gap-2 overflow-x-auto w-full md:w-auto pb-1 no-scrollbar">
+                        <button class="whitespace-nowrap rounded-full bg-primary px-4 py-2 text-sm font-bold text-white shadow-md shadow-primary/20">전체 보기</button>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div id="posts-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                
+                
+
+                
+
+            </div>
+
+            <div class="h-20"></div>
+        </main>
+    </div>
+
+    
+    <div id="upload-modal" class="relative z-[300] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <h3 class="text-lg font-bold leading-6 text-gray-900 mb-4">새 게시물 작성</h3>
+                    <form id="upload-form" class="flex flex-col gap-4">
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
+                            <select id="post-category" class="w-full rounded-md border-0 py-2 px-3 ring-1 ring-inset ring-gray-300">
+                                <option value="machine">기계제어공학부</option>
+                                <option value="design">콘텐츠융합디자인학부</option>
+                            </select>
+                        </div>
+
+                        <input type="text" id="post-title" placeholder="제목" class="w-full rounded-md border-0 py-2 px-3 ring-1 ring-inset ring-gray-300" required>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">이미지</label>
+                            <input type="file" id="post-image" accept="image/*" class="block w-full text-sm text-slate-500">
+                        </div>
+
+                        <textarea id="post-content" rows="3" placeholder="내용" class="w-full rounded-md border-0 py-2 px-3 ring-1 ring-inset ring-gray-300" required></textarea>
+
+                        <div class="flex justify-end gap-2 mt-4">
+                            <button type="button" onclick="document.getElementById('upload-modal').classList.add('hidden')" class="bg-gray-200 px-4 py-2 rounded-md">취소</button>
+                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md">업로드</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button id="show-upload-btn" class="hidden fixed bottom-8 right-8 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-all z-[250] flex items-center gap-2 font-bold">
+    <span class="material-symbols-outlined">edit</span>
+    글쓰기
+</button>
+<div id="detail-modal" class="relative z-[400] hidden">
+        <div class="fixed inset-0 bg-black/70 transition-opacity" onclick="closeDetailModal()"></div>
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4">
+                <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all w-full max-w-2xl">
+                    <div class="bg-white p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">콘텐츠융합디자인학부</span>
+                            <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-500">
+                                <span class="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        <h2 id="modal-title" class="text-2xl font-bold text-gray-900 mb-4">제목</h2>
+                        <div id="modal-image-container" class="mb-6 w-full overflow-hidden rounded-lg bg-gray-100 hidden">
+                            <img id="modal-image" src="" alt="Detail" class="w-full h-auto object-contain max-h-[500px]">
+                        </div>
+                        <div class="prose max-w-none">
+                            <p id="modal-content" class="text-gray-700 whitespace-pre-wrap leading-relaxed">내용</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t flex justify-between text-sm text-gray-500">
+                            <span id="modal-author">작성자</span>
+                            <span id="modal-date">날짜</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <scripT>
+    // 게시물 데이터를 저장할 전역 변수
+    let allPosts = []; 
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadPosts();        // 게시물 불러오기
+        checkLoginUI();     // 로그인 상태 확인
+        setupUploadModal(); // 글쓰기 기능 설정
+    });
+
+    // 1. 게시물 불러오기 함수
+    async function loadPosts() {
+        const container = document.getElementById('posts-container');
+        if (!container) return;
+
+        try {
+            const response = await fetch('http://localhost:3000/api/posts');
+            const posts = await response.json();
+            
+            allPosts = posts; // 나중에 상세 볼 때 쓰려고 저장
+            
+            // 'design' 카테고리만 필터링
+            const designPosts = posts.filter(post => post.category === 'design');
+
+            container.innerHTML = '';
+            
+            if (designPosts.length === 0) {
+                container.innerHTML = '<p class="col-span-full text-center text-gray-500 py-10">등록된 게시물이 없습니다.</p>';
+                return;
+            }
+
+            designPosts.forEach(post => {
+                const date = new Date(post.date).toLocaleDateString();
+                const imageHTML = post.image 
+                    ? `<img src="${post.image}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">` 
+                    : `<div class="h-full w-full bg-pink-100 flex items-center justify-center text-pink-300 text-4xl">🎨</div>`;
+
+                // 클릭 시 openDetailModal 실행되도록 onclick 추가
+                const cardHTML = `
+                    <div onclick="openDetailModal(${post.id})" class="group relative cursor-pointer overflow-hidden rounded-xl bg-white shadow-md transition-all hover:-translate-y-1 hover:shadow-xl">
+                        <div class="aspect-video w-full overflow-hidden bg-gray-200">
+                            ${imageHTML}
+                        </div>
+                        <div class="p-4">
+                            <span class="text-xs font-bold text-pink-600 mb-1 block">콘텐츠융합디자인학부</span>
+                            <h3 class="mb-1 text-lg font-bold text-gray-900 line-clamp-1">${post.title}</h3>
+                            <p class="text-sm text-gray-600 line-clamp-2">${post.content}</p>
+                            <div class="mt-4 flex items-center justify-between border-t pt-3">
+                                <span class="text-xs font-medium text-gray-700">작성자: ${post.author.split('@')[0]}</span>
+                                <span class="text-xs text-gray-500">${date}</span>
+                            </div>
+                        </div>
+                    </div>`;
+                container.innerHTML += cardHTML;
+            });
+        } catch (error) { 
+            console.error(error); 
+        }
+    }
+
+    // 2. 상세 모달 열기 함수
+    function openDetailModal(id) {
+        const post = allPosts.find(p => p.id === id);
+        if (!post) return;
+
+        // 내용 채우기
+        document.getElementById('modal-title').innerText = post.title;
+        document.getElementById('modal-content').innerText = post.content;
+        document.getElementById('modal-author').innerText = '작성자: ' + post.author.split('@')[0];
+        document.getElementById('modal-date').innerText = new Date(post.date).toLocaleDateString();
+
+        // 이미지 처리
+        const imgContainer = document.getElementById('modal-image-container');
+        const imgEl = document.getElementById('modal-image');
+        if (post.image) {
+            imgEl.src = post.image;
+            imgContainer.classList.remove('hidden');
+        } else {
+            imgContainer.classList.add('hidden');
+        }
+
+        // 모달 보이기
+        document.getElementById('detail-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 3. 상세 모달 닫기 함수
+    function closeDetailModal() {
+        document.getElementById('detail-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    // 4. 로그인 UI 및 글쓰기 설정
+    function checkLoginUI() {
+        const savedUser = localStorage.getItem('user');
+        const uploadBtn = document.getElementById('show-upload-btn');
+        
+        if (savedUser) {
+            // 헤더 버튼 변경
+            const headerLoginBtn = document.querySelector('header button'); 
+            if(headerLoginBtn) {
+                 const textSpan = headerLoginBtn.querySelector('span:not(.material-symbols-outlined)') || headerLoginBtn;
+                 textSpan.innerText = "My Page";
+                 headerLoginBtn.onclick = () => window.location.href = 'mypage.html';
+            }
+            // 글쓰기 버튼 보이기
+            if(uploadBtn) uploadBtn.classList.remove('hidden');
+        }
+    }
+
+    function setupUploadModal() {
+        const uploadBtn = document.getElementById('show-upload-btn');
+        const uploadModal = document.getElementById('upload-modal');
+        const uploadForm = document.getElementById('upload-form');
+
+        // 모달 열기
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', () => {
+                uploadModal.classList.remove('hidden');
+            });
+        }
+
+        // 업로드 처리
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const savedUser = localStorage.getItem('user');
+                if (!savedUser) { alert("로그인이 필요합니다!"); return; }
+
+                const title = document.getElementById('post-title').value;
+                const content = document.getElementById('post-content').value;
+                const category = document.getElementById('post-category').value;
+                const fileInput = document.getElementById('post-image');
+                
+                let imageBase64 = null;
+                if (fileInput.files[0]) {
+                    imageBase64 = await convertToBase64(fileInput.files[0]);
+                }
+
+                try {
+                    await fetch('http://localhost:3000/api/posts', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            title, content, author: savedUser, category: category, image: imageBase64 
+                        })
+                    });
+
+                    alert('업로드 완료!');
+                    uploadModal.classList.add('hidden');
+                    
+                    // 현재 페이지(디자인)와 같은 카테고리면 바로 목록 갱신
+                    if (category === 'design') {
+                        loadPosts();
+                    } else {
+                        alert('다른 학부 게시판에 등록되었습니다.');
+                    }
+                } catch (error) { 
+                    console.error(error); 
+                    alert('업로드 실패'); 
+                }
+            });
+        }
+    }
+
+    // 이미지 변환 도우미 함수
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    };
+</script>
+    
+</body>
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html class="light" lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>포트폴리오 플랫폼</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        /* 커스텀 스크롤바 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #475569;
+        }
+
+        /* 모달 슬라이더 트랜지션 */
+        .slide-image {
+            transition: opacity 0.5s ease-in-out;
+        }
+        /* 로그인 모달 트랜지션 */
+        .login-modal-panel {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#0d141b] dark:text-slate-50">
+    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <div class="layout-container flex h-full grow flex-col">
+            
+            <header class="sticky top-0 z-40 flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-4 py-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+                <div class="flex items-center gap-8">
+                    <div class="flex items-center gap-3 text-primary">
+                        <div class="size-6">
+                            <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-bold leading-tight tracking-[-0.015em] text-[#0d141b] dark:text-slate-50">포트폴리오 플랫폼</h2>
+                    </div>
+                    <nav class="hidden md:flex items-center gap-6">
+                        <a class="text-sm font-medium leading-normal text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="기계.html">기계제어공학부</a>
+                        <a class="text-sm font-medium leading-normal text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="디자인.html">콘텐츠융합디자인학부</a>
+                    </nav>
+                </div>
+                 <div class="flex flex-1 justify-end gap-4">
+                    <label class="flex-col min-w-40 !h-10 max-w-64 hidden lg:flex">
+                        <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                            <div class="text-slate-500 dark:text-slate-400 flex border-none bg-slate-200 dark:bg-slate-800 items-center justify-center pl-3 rounded-l-lg border-r-0">
+                                <span class="material-symbols-outlined" style="font-size: 20px;">search</span>
+                            </div>
+                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg focus:outline-0 focus:ring-0 border-none bg-slate-200 dark:bg-slate-800 h-full placeholder:text-slate-500 dark:placeholder:text-slate-400 px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="검색" value=""/>
+                        </div>
+                    </label>
+                    <button onclick="openLoginModal()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-slate-50 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+                        <span class="truncate">로그인 / 회원가입</span>
+                    </button>
+                </div>
+            </header>
+
+            <main class="flex-grow">
+                <div class="@container py-10 px-4 md:px-10 lg:px-20">
+                    <div class="@[480px]:p-4">
+                        <div class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 rounded-xl items-center justify-center p-6 text-center" style='background-image: linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%), url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80");'>
+                            <div class="flex flex-col gap-2 text-center text-slate-50 drop-shadow-lg">
+                                <h1 class="text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">미래의 혁신가들을 위한 공간</h1>
+                                <h2 class="text-slate-200 text-base font-normal leading-normal @[480px]:text-lg @[480px]:font-normal @[480px]:leading-normal">최고의 공학 및 디자인 학생들의 놀라운 프로젝트를 발견하고 소개하세요.</h2>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <section id="mech" class="py-16 px-4 md:px-10 lg:px-20 scroll-mt-20 bg-slate-50 dark:bg-slate-900/30">
+                     <div class="flex flex-col gap-6">
+                        <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center pb-6 border-b border-slate-200 dark:border-slate-800">
+                            <div class="flex flex-col gap-2">
+                                <h1 class="text-3xl font-black leading-tight tracking-[-0.033em] text-slate-900 dark:text-slate-50">기계제어공학부</h1>
+                                <p class="text-base font-normal leading-normal text-slate-500 dark:text-slate-400">설계, 해석, 그리고 제어의 정점</p>
+                            </div>
+                            
+                        </div>
+                        
+                        
+                     </div>
+                </section>
+
+                <hr class="border-slate-200 dark:border-slate-800 my-8"/>
+
+                <section id="design" class="py-16 px-4 md:px-10 lg:px-20 scroll-mt-20">
+                    <div class="flex flex-col gap-6">
+                        <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center pb-6 border-b border-slate-200 dark:border-slate-800">
+                             <div class="flex flex-col gap-2">
+                                <h3 class="text-3xl font-black text-slate-900 dark:text-slate-50">콘텐츠융합디자인학부</h3>
+                                <p class="text-base text-slate-500 dark:text-slate-400">시각, 영상, 그리고 사용자 경험의 혁신</p>
+                            </div>
+                            
+                        </div>
+                        
+                        
+                    </div>
+                </section>
+
+            </main>
+
+            <footer class="mt-20 border-t border-slate-200 dark:border-slate-800 pt-10 pb-8 bg-background-light dark:bg-background-dark px-4 md:px-10 lg:px-20">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div class="flex items-center gap-3 text-primary">
+                        <div class="size-6">
+                            <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-bold leading-tight tracking-[-0.015em] text-[#0d141b] dark:text-slate-50">포트폴리오 플랫폼</h2>
+                    </div>
+                    <nav class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+                        <a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">서비스 소개</a>
+                        <a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">문의하기</a>
+                        <a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">개인정보처리방침</a>
+                        <a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">이용약관</a>
+                    </nav>
+                </div>
+                <div class="mt-8 text-center text-xs text-slate-400">
+                    &copy; 2024 포트폴리오 플랫폼. All rights reserved.
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <div id="project-modal" class="fixed inset-0 z-[100] hidden" aria-modal="true" role="dialog">
+        <div id="modal-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity opacity-0" onclick="closeModal()"></div>
+        
+        <div class="relative flex min-h-full items-center justify-center p-4">
+            <div id="modal-panel" class="relative w-full max-w-6xl overflow-hidden rounded-2xl bg-white dark:bg-slate-900 shadow-2xl ring-1 ring-slate-900/5 transition-all transform scale-95 opacity-0">
+                <button onclick="closeModal()" class="absolute right-4 top-4 z-20 rounded-full bg-black/20 p-2 text-white/80 hover:bg-black/40 dark:bg-white/10 dark:text-slate-200 dark:hover:bg-white/20 transition-colors">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+                
+                <div class="flex flex-col md:flex-row h-auto max-h-[90vh]">
+                    <div class="w-full md:w-3/5 relative bg-slate-950 flex items-center justify-center group/slider">
+                        <div id="modal-slider-container" class="relative w-full h-[400px] md:h-[600px] overflow-hidden">
+                            </div>
+                        
+                        <button onclick="changeModalSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-sm opacity-0 group-hover/slider:opacity-100 transition-opacity z-10">
+                            <span class="material-symbols-outlined">arrow_back_ios_new</span>
+                        </button>
+                        <button onclick="changeModalSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-sm opacity-0 group-hover/slider:opacity-100 transition-opacity z-10">
+                            <span class="material-symbols-outlined">arrow_forward_ios</span>
+                        </button>
+                        
+                        <div id="slider-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                            </div>
+                    </div>
+                    
+                    <div class="w-full md:w-2/5 p-8 flex flex-col h-[600px] overflow-hidden">
+                        <div class="flex-shrink-0">
+                            <h2 id="modal-title" class="mt-4 text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">Project Title</h2>
+                            <p id="modal-author" class="text-base text-slate-500 dark:text-slate-400 mt-2 font-medium">Author Name</p>
+                        </div>
+
+                        <div class="flex-shrink-0 mt-6 pb-4 border-b border-slate-100 dark:border-slate-700 flex flex-wrap items-center gap-x-6 gap-y-2">
+                            <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                                <span class="material-symbols-outlined text-primary text-[18px]">mail</span>
+                                <span id="modal-email" class="hover:underline cursor-pointer">email@example.com</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" class="w-4 h-4 opacity-70" alt="insta">
+                                <span id="modal-insta" class="hover:underline cursor-pointer">@instagram_id</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-grow overflow-y-auto custom-scrollbar mt-6 pr-2">
+                            <div class="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed text-[15px]">
+                                <p id="modal-description">
+                                    Description goes here...
+                                </p>
+                            </div>
+                            <div id="modal-tags" class="flex flex-wrap gap-2 mt-6">
+                            </div>
+                        </div>
+                            
+                        <div class="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 flex-shrink-0">
+                            <button class="w-full flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700 transition-all">
+                                <span class="material-symbols-outlined">share</span>
+                                친구에게 공유하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="login-modal" class="fixed inset-0 z-[200] hidden" aria-modal="true" role="dialog">
+        <div id="login-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity opacity-0" onclick="closeLoginModal()"></div>
+        
+        <div class="relative flex min-h-full items-center justify-center p-4">
+            <div id="login-panel" class="login-modal-panel relative w-full max-w-md overflow-hidden rounded-2xl bg-white dark:bg-slate-900 shadow-2xl ring-1 ring-slate-900/5 transform translate-y-4 opacity-0">
+                <button onclick="closeLoginModal()" class="absolute right-4 top-4 z-10 rounded-full bg-black/20 p-2 text-white/80 hover:bg-black/40 dark:bg-white/10 dark:text-slate-200 dark:hover:bg-white/20 transition-colors">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+                
+                <div class="p-8">
+                    <h2 class="text-3xl font-bold text-center text-slate-900 dark:text-white mb-6">로그인</h2>
+                    <form id="login-form" class="flex flex-col gap-4">
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">이메일</label>
+                            <input type="email" id="email" class="form-input w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-base text-slate-900 dark:text-white focus:ring-primary focus:border-primary" placeholder="name@example.com" required>
+                        </div>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">비밀번호</label>
+                            <input type="password" id="password" class="form-input w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-base text-slate-900 dark:text-white focus:ring-primary focus:border-primary" placeholder="비밀번호를 입력하세요" required>
+                        </div>
+                        <button type="submit" class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 mt-2 bg-primary text-slate-50 text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+                            <span class="truncate">로그인</span>
+                        </button>
+                    </form>
+                    <div class="mt-4 text-center text-sm">
+                        <a href="#" class="text-primary hover:underline">비밀번호 찾기</a>
+                        <span class="mx-2 text-slate-400">|</span>
+                        <a href="#" class="text-primary hover:underline">회원가입</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="upload-modal" class="relative z-[300] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <h3 class="text-lg font-bold leading-6 text-gray-900 mb-4">새 게시물 작성</h3>
+                    <form id="upload-form" class="flex flex-col gap-4">
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
+                            <select id="post-category" class="w-full rounded-md border-0 py-2 px-3 ring-1 ring-inset ring-gray-300">
+                                <option value="machine">기계제어공학부</option>
+                                <option value="design">콘텐츠융합디자인학부</option>
+                            </select>
+                        </div>
+
+                        <input type="text" id="post-title" placeholder="제목" class="w-full rounded-md border-0 py-2 px-3 ring-1 ring-inset ring-gray-300" required>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">이미지</label>
+                            <input type="file" id="post-image" accept="image/*" class="block w-full text-sm text-slate-500">
+                        </div>
+
+                        <textarea id="post-content" rows="3" placeholder="내용" class="w-full rounded-md border-0 py-2 px-3 ring-1 ring-inset ring-gray-300" required></textarea>
+
+                        <div class="flex justify-end gap-2 mt-4">
+                            <button type="button" onclick="document.getElementById('upload-modal').classList.add('hidden')" class="bg-gray-200 px-4 py-2 rounded-md">취소</button>
+                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md">업로드</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button id="show-upload-btn" class="hidden fixed bottom-8 right-8 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-all z-[250] flex items-center gap-2 font-bold">
+    <span class="material-symbols-outlined">edit</span>
+    글쓰기
+</button>
+<div id="detail-modal" class="relative z-[400] hidden">
+    <div class="fixed inset-0 bg-black/70 transition-opacity" onclick="closeDetailModal()"></div>
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all w-full max-w-2xl">
+                <div class="bg-white p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <span id="modal-category" class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">카테고리</span>
+                        <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-500">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+                    <h2 id="modal-title" class="text-2xl font-bold text-gray-900 mb-4">제목</h2>
+                    <div id="modal-image-container" class="mb-6 w-full overflow-hidden rounded-lg bg-gray-100 hidden">
+                        <img id="modal-image" src="" alt="Detail" class="w-full h-auto object-contain max-h-[500px]">
+                    </div>
+                    <div class="prose max-w-none">
+                        <p id="modal-content" class="text-gray-700 whitespace-pre-wrap leading-relaxed">내용</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t flex justify-between text-sm text-gray-500">
+                        <span id="modal-author">작성자</span>
+                        <span id="modal-date">날짜</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    <script>
+        // 데이터
+
+
+        let currentModalImages = [];
+        let currentSlideIndex = 0;
+
+        const modal = document.getElementById('project-modal');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalPanel = document.getElementById('modal-panel');
+        const sliderContainer = document.getElementById('modal-slider-container');
+        const dotsContainer = document.getElementById('slider-dots');
+
+        // [추가] 로그인 모달 관련 DOM 요소
+        const loginModal = document.getElementById('login-modal');
+        const loginBackdrop = document.getElementById('login-backdrop');
+        const loginPanel = document.getElementById('login-panel');
+        
+        // [추가] 로그인 모달 열기
+        function openLoginModal() {
+            if (!modal.classList.contains('hidden')) closeModal(); // 프로젝트 모달이 열려있으면 닫기
+            
+            loginModal.classList.remove('hidden');
+            setTimeout(() => {
+                loginBackdrop.classList.remove('opacity-0');
+                loginPanel.classList.remove('translate-y-4', 'opacity-0');
+                loginPanel.classList.add('translate-y-0', 'opacity-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        // [추가] 로그인 모달 닫기
+        function closeLoginModal() {
+            loginBackdrop.classList.add('opacity-0');
+            loginPanel.classList.remove('translate-y-0', 'opacity-100');
+            loginPanel.classList.add('translate-y-4', 'opacity-0');
+
+            setTimeout(() => {
+                loginModal.classList.add('hidden');
+                // 프로젝트 모달이 열려있지 않은 경우에만 body 스크롤 복구
+                if (modal.classList.contains('hidden')) {
+                    document.body.style.overflow = '';
+                }
+            }, 300); 
+        }
+
+        function openModal(id) {
+            if (!loginModal.classList.contains('hidden')) closeLoginModal(); // 로그인 모달이 열려있으면 닫기
+
+            const data = projectData[id];
+            if (!data) return;
+            
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-author').innerText = data.author;
+            document.getElementById('modal-email').innerText = data.email;
+            document.getElementById('modal-insta').innerText = data.insta;
+            
+            document.getElementById('modal-description').innerText = data.description;
+
+            // 태그
+            const tagsContainer = document.getElementById('modal-tags');
+            tagsContainer.innerHTML = '';
+            data.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 dark:bg-slate-700 dark:text-slate-300';
+                span.innerText = tag;
+                tagsContainer.appendChild(span);
+            });
+
+            // 이미지 슬라이더 초기화
+            currentModalImages = data.images;
+            currentSlideIndex = 0;
+            renderSlider();
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalBackdrop.classList.remove('opacity-0');
+                modalPanel.classList.remove('opacity-0', 'scale-95');
+                modalPanel.classList.add('opacity-100', 'scale-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function renderSlider() {
+            sliderContainer.innerHTML = '';
+            dotsContainer.innerHTML = '';
+
+            currentModalImages.forEach((src, index) => {
+                // 이미지 엘리먼트
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = `slide-image absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${index === currentSlideIndex ? 'opacity-100' : 'opacity-0'}`;
+                sliderContainer.appendChild(img);
+
+                // 도트
+                const dot = document.createElement('button');
+                dot.className = `w-2 h-2 rounded-full transition-colors ${index === currentSlideIndex ? 'bg-white' : 'bg-white/40 hover:bg-white/60'}`;
+                dot.onclick = (e) => { e.stopPropagation(); goToSlide(index); };
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function changeModalSlide(direction) {
+            let nextIndex = currentSlideIndex + direction;
+            if (nextIndex >= currentModalImages.length) nextIndex = 0;
+            if (nextIndex < 0) nextIndex = currentModalImages.length - 1;
+            goToSlide(nextIndex);
+        }
+
+        function goToSlide(index) {
+            currentSlideIndex = index;
+            const images = sliderContainer.querySelectorAll('img');
+            const dots = dotsContainer.querySelectorAll('button');
+
+            images.forEach((img, i) => {
+                if (i === index) {
+                    img.classList.remove('opacity-0');
+                    img.classList.add('opacity-100');
+                } else {
+                    img.classList.remove('opacity-100');
+                    img.classList.add('opacity-0');
+                }
+            });
+
+            dots.forEach((dot, i) => {
+                dot.className = `w-2 h-2 rounded-full transition-colors ${i === index ? 'bg-white' : 'bg-white/40 hover:bg-white/60'}`;
+            });
+        }
+
+        function closeModal() {
+            modalBackdrop.classList.add('opacity-0');
+            modalPanel.classList.remove('opacity-100', 'scale-100');
+            modalPanel.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // 로그인 모달이 열려있지 않은 경우에만 body 스크롤 복구
+                if (loginModal.classList.contains('hidden')) {
+                    document.body.style.overflow = '';
+                }
+            }, 300); 
+        }
+
+        document.addEventListener('keydown', function(event) {
+            // [수정] ESC 키 이벤트 처리 로직
+            if (event.key === "Escape") {
+                if (!loginModal.classList.contains('hidden')) {
+                    closeLoginModal();
+                } else if (!modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            }
+            // [수정] 화살표 키 이벤트 처리 로직
+            if (!modal.classList.contains('hidden')) {
+                if (event.key === "ArrowLeft") changeModalSlide(-1);
+                if (event.key === "ArrowRight") changeModalSlide(1);
+            }
+        });
+        
+    
+    let currentUser = null;
+    let allPosts = []; // 전체 게시물 저장용
+
+    // 로그인 상태 업데이트 (이름 클릭 시 마이페이지 이동 기능 추가됨)
+    function updateLoginState(username) {
+        currentUser = username;
+        const headerLoginBtn = document.querySelector('header button'); 
+        
+        if(headerLoginBtn) {
+            // 버튼 스타일 변경 및 텍스트 수정
+            const textSpan = headerLoginBtn.querySelector('span:not(.material-symbols-outlined)') || headerLoginBtn;
+            textSpan.innerText = 'My Page';
+            
+            // [중요] 로그인된 상태에서 버튼 클릭하면 마이페이지로 이동
+            headerLoginBtn.onclick = function() {
+                window.location.href = 'mypage.html';
+            };
+        }
+        
+        const uploadBtn = document.getElementById('show-upload-btn');
+        if(uploadBtn) uploadBtn.classList.remove('hidden');
+        if (typeof closeLoginModal === 'function') closeLoginModal();
+    }
+    // [누락된 코드] 로그인 폼 제출 처리
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // 1. 폼 제출 시 페이지 새로고침 방지
+
+            const emailInput = document.getElementById('email').value;
+            const passwordInput = document.getElementById('password').value;
+
+            // 2. (실제 서버 통신이 있다면 여기에 fetch 코드 작성)
+            // 임시로 이메일만 입력하면 성공한 것으로 처리하는 코드입니다.
+            if(emailInput) {
+                alert('로그인 되었습니다.');
+                
+                // 3. 로컬 스토리지에 유저 정보 저장 (새로고침 해도 유지되도록)
+                localStorage.setItem('user', emailInput);
+                
+                // 4. 화면(헤더) 상태 업데이트 -> 이제 헤더 버튼이 'mypage.html'로 이동하게 바뀜
+                updateLoginState(emailInput);
+                
+                // 5. 모달 닫기
+                closeLoginModal();
+            } else {
+                alert('이메일을 입력해주세요.');
+            }
+        });
+    }
+
+    // 초기화
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedUser = localStorage.getItem('user');
+        if (savedUser) updateLoginState(savedUser);
+        loadPosts();
+    });
+
+    // 게시물 불러오기 (사진 표시 & 클릭 시 모달 열기)
+    async function loadPosts() {
+        const container = document.getElementById('posts-container');
+        if (!container) return;
+
+        try {
+            // 기존 서버 게시물 지우기
+            const oldDynamicPosts = container.querySelectorAll('.server-post');
+            oldDynamicPosts.forEach(post => post.remove());
+
+            const response = await fetch('http://localhost:3000/api/posts');
+            const posts = await response.json();
+            allPosts = posts; // 데이터 저장
+
+            posts.forEach(post => {
+                const date = new Date(post.date).toLocaleDateString();
+                
+                // [사진 표시 로직]
+                const imageHTML = post.image 
+                    ? `<img src="${post.image}" class="h-full w-full object-cover">` 
+                    : `<div class="h-full w-full bg-gray-100 flex items-center justify-center text-4xl">📝</div>`;
+
+                // [클릭 이벤트] onclick="openDetailModal(${post.id})" 추가됨
+                const cardHTML = `
+                    <div onclick="openDetailModal(${post.id})" class="server-post group relative overflow-hidden rounded-xl bg-white shadow-md transition-all hover:-translate-y-1 hover:shadow-xl cursor-pointer">
+                        <div class="aspect-video w-full overflow-hidden bg-gray-200">${imageHTML}</div>
+                        <div class="p-4">
+                            <span class="text-xs font-bold text-indigo-600 mb-1 block">
+                                ${post.category === 'machine' ? '기계제어공학부' : (post.category === 'design' ? '콘텐츠융합디자인학부' : '전체')}
+                            </span>
+                            <h3 class="mb-1 text-lg font-bold text-gray-900 line-clamp-1">${post.title}</h3>
+                            <p class="text-sm text-gray-600 line-clamp-2">${post.content}</p>
+                            <div class="mt-4 flex items-center justify-between border-t pt-3">
+                                <span class="text-xs text-gray-700">${post.author.split('@')[0]}</span>
+                                <span class="text-xs text-gray-500">${date}</span>
+                            </div>
+                        </div>
+                    </div>`;
+                
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        } catch (error) { console.error(error); }
+    }
+
+    // [상세 모달 열기 함수]
+    function openDetailModal(id) {
+        const post = allPosts.find(p => p.id === id);
+        if (!post) return;
+
+        document.getElementById('modal-title').innerText = post.title;
+        document.getElementById('modal-content').innerText = post.content;
+        document.getElementById('modal-author').innerText = '작성자: ' + post.author.split('@')[0];
+        document.getElementById('modal-date').innerText = new Date(post.date).toLocaleDateString();
+        
+        const catName = post.category === 'machine' ? '기계제어공학부' : (post.category === 'design' ? '콘텐츠융합디자인학부' : '전체');
+        document.getElementById('modal-category').innerText = catName;
+
+        const imgContainer = document.getElementById('modal-image-container');
+        const imgEl = document.getElementById('modal-image');
+        if (post.image) {
+            imgEl.src = post.image;
+            imgContainer.classList.remove('hidden');
+        } else {
+            imgContainer.classList.add('hidden');
+        }
+
+        document.getElementById('detail-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDetailModal() {
+        document.getElementById('detail-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    // ... (기존 로그인 폼, 업로드 폼 등 나머지 스크립트는 유지해주세요) ...
+    // 단, updateLoginState 함수는 위에서 정의한 것으로 써야 합니다.
+    // convertToBase64 함수 등도 필요하면 여기에 포함시키세요.
+
+    // 게시물 업로드 처리 (기존 코드 유지 + 저장된 유저 사용)
+    const uploadForm = document.getElementById('upload-form');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // currentUser 변수가 없으면 localStorage에서 다시 확인
+            if (!currentUser) currentUser = localStorage.getItem('user');
+            
+            if (!currentUser) { alert("로그인이 필요합니다!"); return; }
+
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/api/posts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, content, author: currentUser })
+                });
+                if (response.ok) {
+                    alert('게시물이 업로드되었습니다!');
+                    document.getElementById('upload-modal').classList.add('hidden');
+                    document.getElementById('post-title').value = '';
+                    document.getElementById('post-content').value = '';
+                    loadPosts();
+                }
+            } catch (error) { console.error(error); alert('오류 발생'); }
+        });
+    }
+    
+    // 모달 닫기 버튼 이벤트 연결 등...
+    const showUploadBtn = document.getElementById('show-upload-btn');
+    if(showUploadBtn) showUploadBtn.addEventListener('click', () => document.getElementById('upload-modal').classList.remove('hidden'));
+
+   </script>
+    
+</body>
+</html>
