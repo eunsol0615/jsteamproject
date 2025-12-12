@@ -4,6 +4,13 @@ const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const app = express();
+// 현재 폴더에 있는 html, css, js 파일들을 그대로 보여주라는 뜻입니다.
+app.use(express.static(__dirname));
+
+// 만약 접속했을 때 바로 index.html을 보여주고 싶다면 아래 코드도 추가하세요.
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html'); 
+});
 const port = 3000;
 
 // 용량 및 CORS 설정
