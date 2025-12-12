@@ -20,19 +20,13 @@ app.use(cors());
 
 // [중요] SQLite 데이터베이스 파일 생성 및 연결
 // 실행하면 프로젝트 폴더에 'database.sqlite' 파일이 자동으로 생깁니다.
-const path = require('path');
-
-// 'RENDER'라는 환경변수가 있으면(서버면) 금고 폴더를 쓰고, 
-// 없으면(내 컴퓨터면) 그냥 현재 폴더를 쓴다는 뜻입니다.
-const dbPath = process.env.RENDER 
-  ? '/var/data/database.sqlite' 
-  : './database.sqlite';
-
+const dbPath = path.resolve(__dirname, 'database.sqlite');
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
-        console.error('DB 연결 실패:', err.message);
+        console.error('데이터베이스 연결 실패:', err.message);
     } else {
-        console.log(`DB 연결 성공! 저장 위치: ${dbPath}`);
+        console.log('SQLite 데이터베이스에 연결되었습니다.');
+        initializeTables(); // 연결 성공하면 테이블 만들기
     }
 });
 
