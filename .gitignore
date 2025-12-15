@@ -1,1 +1,15 @@
-node_modules
+# .gitignore
+
+# 의존성 모듈 (용량이 매우 큼, 절대 올리면 안 됨)
+node_modules/
+
+# 로컬 데이터베이스 (서버 데이터와 덮어씌워지면 안 됨)
+*.sqlite
+*.db
+database.sqlite
+
+# 환경 변수 파일 (비밀번호 등)
+.env
+
+# 맥 운영체제 임시 파일
+.DS_Store
