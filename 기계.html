@@ -285,23 +285,28 @@
     // ==========================================
     // 4. 로그인 UI 및 기능
     // ==========================================
-    function checkLoginUI() {
-        const savedUser = localStorage.getItem('user');
-        const uploadBtn = document.getElementById('show-upload-btn');
-        const headerLoginBtn = document.querySelector('header button'); 
-        
-        if (savedUser) {
-            // 로그인 상태: 버튼을 'My Page'로 변경
-            if(headerLoginBtn) {
-                 const textSpan = headerLoginBtn.querySelector('span:not(.material-symbols-outlined)') || headerLoginBtn;
-                 if(textSpan.innerText) textSpan.innerText = "My Page"; 
-                 
-                 headerLoginBtn.onclick = () => alert(`현재 로그인된 사용자: ${savedUser}`);
-            }
-            // 글쓰기 버튼 보이기
-            if(uploadBtn) uploadBtn.classList.remove('hidden');
+    // 디자인.html, 기계.html의 checkLoginUI 함수 수정
+
+function checkLoginUI() {
+    const savedUser = localStorage.getItem('user');
+    const uploadBtn = document.getElementById('show-upload-btn');
+    const headerLoginBtn = document.querySelector('header button'); 
+    
+    if (savedUser) {
+        // 로그인 상태: 버튼 텍스트 변경 및 마이페이지 연결
+        if(headerLoginBtn) {
+                const textSpan = headerLoginBtn.querySelector('span:not(.material-symbols-outlined)') || headerLoginBtn;
+                if(textSpan.innerText) textSpan.innerText = "My Page"; 
+                
+                // [수정] 클릭하면 mypage.html로 이동
+                headerLoginBtn.onclick = () => {
+                    window.location.href = 'mypage.html';
+                };
         }
+        // 글쓰기 버튼 보이기
+        if(uploadBtn) uploadBtn.classList.remove('hidden');
     }
+}
 
     // 로그인 버튼 클릭 시 메인 페이지로 이동 (로그인 모달이 메인에만 있기 때문)
     function setupLoginRedirect() {

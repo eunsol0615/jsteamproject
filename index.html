@@ -265,26 +265,24 @@
         // ==========================================
         
         // 로그인 상태 UI 업데이트
-        function updateLoginState(username) {
-            currentUser = username;
-            const headerLoginBtn = document.querySelector('header button'); 
-            
-            if(headerLoginBtn) {
-                const textSpan = headerLoginBtn.querySelector('span:not(.material-symbols-outlined)') || headerLoginBtn;
-                textSpan.innerText = 'My Page'; // 로그인 되면 버튼 텍스트 변경
-                
-                // 마이페이지 이동 (실제 파일이 있다면)
-                headerLoginBtn.onclick = function() {
-                    // window.location.href = 'mypage.html'; // 마이페이지가 있다면 주석 해제
-                    alert(`현재 로그인된 사용자: ${username}`);
-                };
-            }
-            
-            const uploadBtn = document.getElementById('show-upload-btn');
-            if(uploadBtn) uploadBtn.classList.remove('hidden');
-            if (typeof closeLoginModal === 'function') closeLoginModal();
-        }
-
+       function updateLoginState(username) {
+    currentUser = username;
+    const headerLoginBtn = document.querySelector('header button'); 
+    
+    if(headerLoginBtn) {
+        const textSpan = headerLoginBtn.querySelector('span:not(.material-symbols-outlined)') || headerLoginBtn;
+        textSpan.innerText = 'My Page'; 
+        
+        // [수정] 클릭하면 알림창 대신 mypage.html로 이동
+        headerLoginBtn.onclick = function() {
+            window.location.href = 'mypage.html';
+        };
+    }
+    
+    const uploadBtn = document.getElementById('show-upload-btn');
+    if(uploadBtn) uploadBtn.classList.remove('hidden');
+    if (typeof closeLoginModal === 'function') closeLoginModal();
+}
         // [중요] 로그인 폼 제출 (서버 통신 추가됨)
         const loginForm = document.getElementById('login-form');
         if (loginForm) {
