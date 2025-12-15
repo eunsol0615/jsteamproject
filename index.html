@@ -233,340 +233,324 @@
 
     
     <script>
-        // 데이터
+        // ==========================================
+        // 1. 유틸리티 함수 (이미지 변환 등)
+        // ==========================================
+        
+        // 파일을 Base64 문자열(텍스트)로 변환해주는 함수
+        function convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
 
+        // ==========================================
+        // 2. 전역 변수 및 초기화
+        // ==========================================
+        let currentUser = null;
+        let allPosts = []; 
 
-        let currentModalImages = [];
-        let currentSlideIndex = 0;
+        // DOM이 로드되면 실행
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('user');
+            if (savedUser) updateLoginState(savedUser);
+            loadPosts(); // 게시물 불러오기
+        });
 
-        const modal = document.getElementById('project-modal');
+        // ==========================================
+        // 3. 로그인 / 로그아웃 관리
+        // ==========================================
+        
+        // 로그인 상태 UI 업데이트
+        function updateLoginState(username) {
+            currentUser = username;
+            const headerLoginBtn = document.querySelector('header button'); 
+            
+            if(headerLoginBtn) {
+                const textSpan = headerLoginBtn.querySelector('span:not(.material-symbols-outlined)') || headerLoginBtn;
+                textSpan.innerText = 'My Page'; // 로그인 되면 버튼 텍스트 변경
+                
+                // 마이페이지 이동 (실제 파일이 있다면)
+                headerLoginBtn.onclick = function() {
+                    // window.location.href = 'mypage.html'; // 마이페이지가 있다면 주석 해제
+                    alert(`현재 로그인된 사용자: ${username}`);
+                };
+            }
+            
+            const uploadBtn = document.getElementById('show-upload-btn');
+            if(uploadBtn) uploadBtn.classList.remove('hidden');
+            if (typeof closeLoginModal === 'function') closeLoginModal();
+        }
+
+        // [중요] 로그인 폼 제출 (서버 통신 추가됨)
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault(); 
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    // [수정] localhost 제거 -> /api/login 사용
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert('로그인 성공!');
+                        localStorage.setItem('user', data.user); // 유저 정보 저장
+                        updateLoginState(data.user);
+                        closeLoginModal();
+                    } else {
+                        alert(data.message || '로그인 실패');
+                    }
+                } catch (error) {
+                    console.error('Login Error:', error);
+                    alert('서버 연결 오류가 발생했습니다.');
+                }
+            });
+        }
+
+        // ==========================================
+        // 4. 게시물 불러오기 (Read)
+        // ==========================================
+        async function loadPosts() {
+            const container = document.getElementById('posts-container');
+            // 만약 posts-container가 없다면(섹션 등) querySelector로 대체해야 할 수도 있음
+            // 현재 HTML 구조상 id="posts-container"를 가진 div가 안 보입니다.
+            // **주의**: HTML <body> 어딘가에 <div id="posts-container" ...>가 있어야 게시물이 보입니다.
+            // 기계/디자인 섹션 안에 각각 넣으려면 코드가 더 복잡해지므로, 
+            // 일단 '콘텐츠융합디자인학부' 섹션 아래나 적절한 곳에 id를 추가했다고 가정하고 작성합니다.
+            
+            // 임시: main 태그 안에 컨테이너가 없다면 동작하지 않을 수 있으니 확인 필요
+            // 여기서는 서버 데이터를 가져오는 로직에 집중합니다.
+            
+            // 기존 코드의 컨테이너 찾기 로직이 없어서, 기계/디자인 섹션에 직접 넣는 로직으로 보완합니다.
+            const mechSection = document.getElementById('mech');
+            const designSection = document.getElementById('design');
+            
+            // 기존 내용을 초기화하고 다시 채워넣기 위해 컨테이너를 찾습니다.
+            // (HTML에 id="posts-container"가 없다면 아래 로직은 무시될 수 있음)
+            // 따라서 예시로 기계/디자인 섹션 내부의 div를 타겟팅합니다.
+            
+            try {
+                // [수정] localhost 제거 -> /api/posts 사용
+                const response = await fetch('/api/posts');
+                if (!response.ok) throw new Error('게시물 불러오기 실패');
+                
+                const posts = await response.json();
+                allPosts = posts; 
+
+                // 화면에 그리기 (간단히 기존 섹션에 추가하는 방식으로 구현)
+                // 실제로는 id="mech-container" 같은 것을 HTML에 만들어두는 게 좋습니다.
+                // 여기서는 기존 섹션 내부에 div를 동적으로 찾아서 넣습니다.
+                
+                // 1. 기존 리스트 청소 (필요시 구현)
+                
+                // 2. 섹션별로 게시물 분류해서 넣기
+                const mechContainer = mechSection ? mechSection.querySelector('.flex.flex-col.gap-6') : null;
+                const designContainer = designSection ? designSection.querySelector('.flex.flex-col.gap-6') : null;
+
+                // 기존 게시물(서버에서 불러온 것들) 삭제 후 다시 렌더링
+                document.querySelectorAll('.server-post-item').forEach(el => el.remove());
+
+                posts.forEach(post => {
+                    const date = new Date(post.date).toLocaleDateString();
+                    
+                    const imageHTML = post.image 
+                        ? `<img src="${post.image}" class="h-full w-full object-cover">` 
+                        : `<div class="h-full w-full bg-slate-200 flex items-center justify-center text-2xl">📄</div>`;
+
+                    const cardHTML = `
+                        <div onclick="openDetailModal(${post.id})" class="server-post-item group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl cursor-pointer border border-slate-200 dark:border-slate-700">
+                            <div class="aspect-video w-full overflow-hidden bg-gray-200">${imageHTML}</div>
+                            <div class="p-4">
+                                <h3 class="mb-1 text-lg font-bold text-slate-900 dark:text-slate-50 line-clamp-1">${post.title}</h3>
+                                <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">${post.content}</p>
+                                <div class="mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-700 pt-3">
+                                    <span class="text-xs text-slate-500 dark:text-slate-500">${post.author.split('@')[0]}</span>
+                                    <span class="text-xs text-slate-400">${date}</span>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    // 카테고리에 맞는 섹션에 추가
+                    if (post.category === 'machine' && mechContainer) {
+                        // 섹션 내부에 그리드 컨테이너가 없으면 하나 만듦
+                        let grid = mechContainer.querySelector('.grid-container');
+                        if(!grid) {
+                            grid = document.createElement('div');
+                            grid.className = 'grid-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+                            mechContainer.appendChild(grid);
+                        }
+                        grid.insertAdjacentHTML('beforeend', cardHTML);
+                    } else if (post.category === 'design' && designContainer) {
+                        let grid = designContainer.querySelector('.grid-container');
+                        if(!grid) {
+                            grid = document.createElement('div');
+                            grid.className = 'grid-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+                            designContainer.appendChild(grid);
+                        }
+                        grid.insertAdjacentHTML('beforeend', cardHTML);
+                    }
+                });
+            } catch (error) { 
+                console.error("게시물 로드 에러:", error); 
+            }
+        }
+
+        // ==========================================
+        // 5. 게시물 업로드 (Create)
+        // ==========================================
+        const uploadForm = document.getElementById('upload-form');
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (!currentUser) currentUser = localStorage.getItem('user');
+                if (!currentUser) { alert("로그인이 필요합니다!"); return; }
+
+                const title = document.getElementById('post-title').value;
+                const content = document.getElementById('post-content').value;
+                const category = document.getElementById('post-category').value;
+                const fileInput = document.getElementById('post-image');
+
+                // 이미지 변환 처리
+                let imageBase64 = null;
+                if (fileInput.files.length > 0) {
+                    try {
+                        imageBase64 = await convertToBase64(fileInput.files[0]);
+                    } catch (err) {
+                        alert("이미지 처리 중 오류가 발생했습니다.");
+                        return;
+                    }
+                }
+
+                try {
+                    // [수정] localhost 제거 -> /api/posts 사용
+                    const response = await fetch('/api/posts', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            title, 
+                            content, 
+                            author: currentUser,
+                            category, // 카테고리 추가
+                            image: imageBase64 // 이미지 데이터 추가
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        alert('게시물이 업로드되었습니다!');
+                        document.getElementById('upload-modal').classList.add('hidden');
+                        uploadForm.reset(); // 폼 초기화
+                        loadPosts(); // 목록 새로고침
+                    } else {
+                        alert('업로드 실패: 서버 오류');
+                    }
+                } catch (error) { 
+                    console.error(error); 
+                    alert('네트워크 오류 발생'); 
+                }
+            });
+        }
+
+        // ==========================================
+        // 6. 모달 관련 UI 로직 (기존 코드 유지)
+        // ==========================================
+        
+        // 상세 모달 (DB 데이터용)
+        // HTML 어딘가에 id="detail-modal" 구조가 있어야 뜹니다. 
+        // 현재 HTML에는 id="detail-modal"이 없어서 추가해 주셔야 합니다.
+        // 또는 기존 project-modal을 재활용해야 합니다.
+        // 여기서는 기존 'project-modal'을 재활용하는 코드로 작성합니다.
+        
+        const modal = document.getElementById('project-modal') || createDetailModalIfMissing(); // 없으면 생성 시도
         const modalBackdrop = document.getElementById('modal-backdrop');
         const modalPanel = document.getElementById('modal-panel');
-        const sliderContainer = document.getElementById('modal-slider-container');
-        const dotsContainer = document.getElementById('slider-dots');
 
-        // [추가] 로그인 모달 관련 DOM 요소
+        function openDetailModal(id) {
+            const post = allPosts.find(p => p.id === id);
+            if (!post) return;
+
+            // 상세 모달 내용 채우기 (HTML 구조에 따라 id가 다를 수 있음)
+            // 여기서는 alert로 내용을 보여주거나, 기존 HTML 구조에 맞춰 값을 넣습니다.
+            // * 아래 id들은 HTML에 실제로 존재해야 에러가 안 납니다.
+            const titleEl = document.getElementById('modal-title');
+            if(titleEl) titleEl.innerText = post.title;
+            
+            const descEl = document.getElementById('modal-description');
+            if(descEl) descEl.innerText = post.content;
+
+            // 이미지가 있다면 보여주기
+            const sliderContainer = document.getElementById('modal-slider-container');
+            if(sliderContainer) {
+                sliderContainer.innerHTML = post.image 
+                    ? `<img src="${post.image}" class="w-full h-full object-contain">` 
+                    : `<div class="flex items-center justify-center h-full text-gray-400">이미지 없음</div>`;
+            }
+
+            // 모달 띄우기 (기존 함수 재활용)
+            if(modal) modal.classList.remove('hidden');
+        }
+
+        // (헬퍼) 상세 모달이 HTML에 없을 경우를 대비해 찾는 함수
+        function createDetailModalIfMissing() {
+            // 기존 코드에 있는 id="login-modal" 형식을 참고하여
+            // 실제 상세 모달 HTML을 <body>에 추가하는 것이 좋습니다.
+            // 일단은 null 반환
+            return null;
+        }
+
+        // 로그인 모달 관련
         const loginModal = document.getElementById('login-modal');
         const loginBackdrop = document.getElementById('login-backdrop');
         const loginPanel = document.getElementById('login-panel');
         
-        // [추가] 로그인 모달 열기
         function openLoginModal() {
-            // modal 변수가 존재하는지 먼저 확인(&&)
-            if (modal && !modal.classList.contains('hidden')) closeModal(); 
-            
-            loginModal.classList.remove('hidden');
-            setTimeout(() => {
-                loginBackdrop.classList.remove('opacity-0');
+            if(loginModal) loginModal.classList.remove('hidden');
+            if(loginBackdrop) loginBackdrop.classList.remove('opacity-0');
+            if(loginPanel) {
                 loginPanel.classList.remove('translate-y-4', 'opacity-0');
                 loginPanel.classList.add('translate-y-0', 'opacity-100');
-            }, 10);
-            
-            document.body.style.overflow = 'hidden';
+            }
         }
-
-        // [추가] 로그인 모달 닫기
         function closeLoginModal() {
-            loginBackdrop.classList.add('opacity-0');
-            loginPanel.classList.remove('translate-y-0', 'opacity-100');
-            loginPanel.classList.add('translate-y-4', 'opacity-0');
-
+            if(loginPanel) {
+                loginPanel.classList.remove('translate-y-0', 'opacity-100');
+                loginPanel.classList.add('translate-y-4', 'opacity-0');
+            }
+            if(loginBackdrop) loginBackdrop.classList.add('opacity-0');
             setTimeout(() => {
-                loginModal.classList.add('hidden');
-                // 프로젝트 모달이 열려있지 않은 경우에만 body 스크롤 복구
-                if (modal.classList.contains('hidden')) {
-                    document.body.style.overflow = '';
-                }
-            }, 300); 
+                if(loginModal) loginModal.classList.add('hidden');
+            }, 300);
         }
 
-        function openModal(id) {
-            if (!loginModal.classList.contains('hidden')) closeLoginModal(); // 로그인 모달이 열려있으면 닫기
-
-            const data = projectData[id];
-            if (!data) return;
-            
-            document.getElementById('modal-title').innerText = data.title;
-            document.getElementById('modal-author').innerText = data.author;
-            document.getElementById('modal-email').innerText = data.email;
-            document.getElementById('modal-insta').innerText = data.insta;
-            
-            document.getElementById('modal-description').innerText = data.description;
-
-            // 태그
-            const tagsContainer = document.getElementById('modal-tags');
-            tagsContainer.innerHTML = '';
-            data.tags.forEach(tag => {
-                const span = document.createElement('span');
-                span.className = 'inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 dark:bg-slate-700 dark:text-slate-300';
-                span.innerText = tag;
-                tagsContainer.appendChild(span);
-            });
-
-            // 이미지 슬라이더 초기화
-            currentModalImages = data.images;
-            currentSlideIndex = 0;
-            renderSlider();
-
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modalBackdrop.classList.remove('opacity-0');
-                modalPanel.classList.remove('opacity-0', 'scale-95');
-                modalPanel.classList.add('opacity-100', 'scale-100');
-            }, 10);
-            
-            document.body.style.overflow = 'hidden';
-        }
-
-        function renderSlider() {
-            sliderContainer.innerHTML = '';
-            dotsContainer.innerHTML = '';
-
-            currentModalImages.forEach((src, index) => {
-                // 이미지 엘리먼트
-                const img = document.createElement('img');
-                img.src = src;
-                img.className = `slide-image absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${index === currentSlideIndex ? 'opacity-100' : 'opacity-0'}`;
-                sliderContainer.appendChild(img);
-
-                // 도트
-                const dot = document.createElement('button');
-                dot.className = `w-2 h-2 rounded-full transition-colors ${index === currentSlideIndex ? 'bg-white' : 'bg-white/40 hover:bg-white/60'}`;
-                dot.onclick = (e) => { e.stopPropagation(); goToSlide(index); };
-                dotsContainer.appendChild(dot);
+        // 업로드 모달 열기 버튼 연결
+        const showUploadBtn = document.getElementById('show-upload-btn');
+        if(showUploadBtn) {
+            showUploadBtn.addEventListener('click', () => {
+                document.getElementById('upload-modal').classList.remove('hidden');
             });
         }
 
-        function changeModalSlide(direction) {
-            let nextIndex = currentSlideIndex + direction;
-            if (nextIndex >= currentModalImages.length) nextIndex = 0;
-            if (nextIndex < 0) nextIndex = currentModalImages.length - 1;
-            goToSlide(nextIndex);
-        }
-
-        function goToSlide(index) {
-            currentSlideIndex = index;
-            const images = sliderContainer.querySelectorAll('img');
-            const dots = dotsContainer.querySelectorAll('button');
-
-            images.forEach((img, i) => {
-                if (i === index) {
-                    img.classList.remove('opacity-0');
-                    img.classList.add('opacity-100');
-                } else {
-                    img.classList.remove('opacity-100');
-                    img.classList.add('opacity-0');
-                }
-            });
-
-            dots.forEach((dot, i) => {
-                dot.className = `w-2 h-2 rounded-full transition-colors ${i === index ? 'bg-white' : 'bg-white/40 hover:bg-white/60'}`;
-            });
-        }
-
-        function closeModal() {
-            modalBackdrop.classList.add('opacity-0');
-            modalPanel.classList.remove('opacity-100', 'scale-100');
-            modalPanel.classList.add('opacity-0', 'scale-95');
-
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                // 로그인 모달이 열려있지 않은 경우에만 body 스크롤 복구
-                if (loginModal.classList.contains('hidden')) {
-                    document.body.style.overflow = '';
-                }
-            }, 300); 
-        }
-
+        // 키보드 이벤트 (ESC 닫기)
         document.addEventListener('keydown', function(event) {
-            // [수정] ESC 키 이벤트 처리 로직
             if (event.key === "Escape") {
-                if (!loginModal.classList.contains('hidden')) {
-                    closeLoginModal();
-                } else if (!modal.classList.contains('hidden')) {
-                    closeModal();
-                }
-            }
-            // [수정] 화살표 키 이벤트 처리 로직
-            if (!modal.classList.contains('hidden')) {
-                if (event.key === "ArrowLeft") changeModalSlide(-1);
-                if (event.key === "ArrowRight") changeModalSlide(1);
-            }
-        });
-        
-    
-    let currentUser = null;
-    let allPosts = []; // 전체 게시물 저장용
-
-    // 로그인 상태 업데이트 (이름 클릭 시 마이페이지 이동 기능 추가됨)
-    function updateLoginState(username) {
-        currentUser = username;
-        const headerLoginBtn = document.querySelector('header button'); 
-        
-        if(headerLoginBtn) {
-            // 버튼 스타일 변경 및 텍스트 수정
-            const textSpan = headerLoginBtn.querySelector('span:not(.material-symbols-outlined)') || headerLoginBtn;
-            textSpan.innerText = 'My Page';
-            
-            // [중요] 로그인된 상태에서 버튼 클릭하면 마이페이지로 이동
-            headerLoginBtn.onclick = function() {
-                window.location.href = 'mypage.html';
-            };
-        }
-        
-        const uploadBtn = document.getElementById('show-upload-btn');
-        if(uploadBtn) uploadBtn.classList.remove('hidden');
-        if (typeof closeLoginModal === 'function') closeLoginModal();
-    }
-    // [누락된 코드] 로그인 폼 제출 처리
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // 1. 폼 제출 시 페이지 새로고침 방지
-
-            const emailInput = document.getElementById('email').value;
-            const passwordInput = document.getElementById('password').value;
-
-            // 2. (실제 서버 통신이 있다면 여기에 fetch 코드 작성)
-            // 임시로 이메일만 입력하면 성공한 것으로 처리하는 코드입니다.
-            if(emailInput) {
-                alert('로그인 되었습니다.');
-                
-                // 3. 로컬 스토리지에 유저 정보 저장 (새로고침 해도 유지되도록)
-                localStorage.setItem('user', emailInput);
-                
-                // 4. 화면(헤더) 상태 업데이트 -> 이제 헤더 버튼이 'mypage.html'로 이동하게 바뀜
-                updateLoginState(emailInput);
-                
-                // 5. 모달 닫기
                 closeLoginModal();
-            } else {
-                alert('이메일을 입력해주세요.');
+                document.getElementById('upload-modal').classList.add('hidden');
+                if(modal) modal.classList.add('hidden');
             }
         });
-    }
-
-    // 초기화
-    window.addEventListener('DOMContentLoaded', () => {
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) updateLoginState(savedUser);
-        loadPosts();
-    });
-
-    // 게시물 불러오기 (사진 표시 & 클릭 시 모달 열기)
-    async function loadPosts() {
-        const container = document.getElementById('posts-container');
-        if (!container) return;
-
-        try {
-            // 기존 서버 게시물 지우기
-            const oldDynamicPosts = container.querySelectorAll('.server-post');
-            oldDynamicPosts.forEach(post => post.remove());
-
-            const response = await fetch('http://localhost:3000/api/posts');
-            const posts = await response.json();
-            allPosts = posts; // 데이터 저장
-
-            posts.forEach(post => {
-                const date = new Date(post.date).toLocaleDateString();
-                
-                // [사진 표시 로직]
-                const imageHTML = post.image 
-                    ? `<img src="${post.image}" class="h-full w-full object-cover">` 
-                    : `<div class="h-full w-full bg-gray-100 flex items-center justify-center text-4xl">📝</div>`;
-
-                // [클릭 이벤트] onclick="openDetailModal(${post.id})" 추가됨
-                const cardHTML = `
-                    <div onclick="openDetailModal(${post.id})" class="server-post group relative overflow-hidden rounded-xl bg-white shadow-md transition-all hover:-translate-y-1 hover:shadow-xl cursor-pointer">
-                        <div class="aspect-video w-full overflow-hidden bg-gray-200">${imageHTML}</div>
-                        <div class="p-4">
-                            <span class="text-xs font-bold text-indigo-600 mb-1 block">
-                                ${post.category === 'machine' ? '기계제어공학부' : (post.category === 'design' ? '콘텐츠융합디자인학부' : '전체')}
-                            </span>
-                            <h3 class="mb-1 text-lg font-bold text-gray-900 line-clamp-1">${post.title}</h3>
-                            <p class="text-sm text-gray-600 line-clamp-2">${post.content}</p>
-                            <div class="mt-4 flex items-center justify-between border-t pt-3">
-                                <span class="text-xs text-gray-700">${post.author.split('@')[0]}</span>
-                                <span class="text-xs text-gray-500">${date}</span>
-                            </div>
-                        </div>
-                    </div>`;
-                
-                container.insertAdjacentHTML('beforeend', cardHTML);
-            });
-        } catch (error) { console.error(error); }
-    }
-
-    // [상세 모달 열기 함수]
-    function openDetailModal(id) {
-        const post = allPosts.find(p => p.id === id);
-        if (!post) return;
-
-        document.getElementById('modal-title').innerText = post.title;
-        document.getElementById('modal-content').innerText = post.content;
-        document.getElementById('modal-author').innerText = '작성자: ' + post.author.split('@')[0];
-        document.getElementById('modal-date').innerText = new Date(post.date).toLocaleDateString();
-        
-        const catName = post.category === 'machine' ? '기계제어공학부' : (post.category === 'design' ? '콘텐츠융합디자인학부' : '전체');
-        document.getElementById('modal-category').innerText = catName;
-
-        const imgContainer = document.getElementById('modal-image-container');
-        const imgEl = document.getElementById('modal-image');
-        if (post.image) {
-            imgEl.src = post.image;
-            imgContainer.classList.remove('hidden');
-        } else {
-            imgContainer.classList.add('hidden');
-        }
-
-        document.getElementById('detail-modal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeDetailModal() {
-        document.getElementById('detail-modal').classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-
-    // ... (기존 로그인 폼, 업로드 폼 등 나머지 스크립트는 유지해주세요) ...
-    // 단, updateLoginState 함수는 위에서 정의한 것으로 써야 합니다.
-    // convertToBase64 함수 등도 필요하면 여기에 포함시키세요.
-
-    // 게시물 업로드 처리 (기존 코드 유지 + 저장된 유저 사용)
-    const uploadForm = document.getElementById('upload-form');
-    if (uploadForm) {
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            // currentUser 변수가 없으면 localStorage에서 다시 확인
-            if (!currentUser) currentUser = localStorage.getItem('user');
-            
-            if (!currentUser) { alert("로그인이 필요합니다!"); return; }
-
-            const title = document.getElementById('post-title').value;
-            const content = document.getElementById('post-content').value;
-
-            try {
-                const response = await fetch('http://localhost:3000/api/posts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, content, author: currentUser })
-                });
-                if (response.ok) {
-                    alert('게시물이 업로드되었습니다!');
-                    document.getElementById('upload-modal').classList.add('hidden');
-                    document.getElementById('post-title').value = '';
-                    document.getElementById('post-content').value = '';
-                    loadPosts();
-                }
-            } catch (error) { console.error(error); alert('오류 발생'); }
-        });
-    }
-    
-    // 모달 닫기 버튼 이벤트 연결 등...
-    const showUploadBtn = document.getElementById('show-upload-btn');
-    if(showUploadBtn) showUploadBtn.addEventListener('click', () => document.getElementById('upload-modal').classList.remove('hidden'));
-
-   </script>
+    </script>
     
 </body>
 </html>

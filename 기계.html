@@ -172,31 +172,40 @@
     
 
     <script>
+    // ==========================================
+    // 1. 전역 변수 및 초기화
+    // ==========================================
     let allPosts = []; 
 
     document.addEventListener("DOMContentLoaded", () => {
-        loadPosts();
-        updateLoginState();
-        setupUploadModal();
+        loadPosts();        // 게시물 불러오기
+        checkLoginUI();     // 로그인 상태 확인 (헤더 처리)
+        setupUploadModal(); // 글쓰기 기능 설정
+        setupLoginRedirect(); // [추가] 로그인 버튼 클릭 시 메인으로 이동
     });
 
-    // 1. 게시물 불러오기
+    // ==========================================
+    // 2. 게시물 불러오기 (Read) - 기계(machine) 카테고리
+    // ==========================================
     async function loadPosts() {
-        // [수정됨] HTML에 있는 'posts-container' 아이디를 정확히 찾아오도록 변경
         const container = document.getElementById('posts-container');
-        if (!container) return; // 에러 방지
+        if (!container) return;
 
         try {
-            const response = await fetch('http://localhost:3000/api/posts');
-            const posts = await response.json();
-            
-            allPosts = posts; 
-            const machinePosts = posts.filter(post => post.category === 'machine');
-            
-            container.innerHTML = ''; 
+            // [수정] localhost 제거 -> /api/posts
+            const response = await fetch('/api/posts');
+            if (!response.ok) throw new Error("서버 응답 실패");
 
+            const posts = await response.json();
+            allPosts = posts; 
+            
+            // 'machine' 카테고리만 필터링
+            const machinePosts = posts.filter(post => post.category === 'machine');
+
+            container.innerHTML = '';
+            
             if (machinePosts.length === 0) {
-                container.innerHTML = '<p class="col-span-full text-center text-gray-500 py-10">등록된 게시물이 없습니다.</p>';
+                container.innerHTML = '<p class="col-span-full text-center text-slate-500 py-10">등록된 게시물이 없습니다.</p>';
                 return;
             }
 
@@ -204,130 +213,183 @@
                 const date = new Date(post.date).toLocaleDateString();
                 const imageHTML = post.image 
                     ? `<img src="${post.image}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">` 
-                    : `<div class="h-full w-full bg-slate-100 flex items-center justify-center text-4xl">🤖</div>`;
+                    : `<div class="h-full w-full bg-slate-200 flex items-center justify-center text-slate-400 text-4xl">⚙️</div>`;
 
+                // 클릭 시 openDetailModal 실행
                 const cardHTML = `
-                    <div onclick="openDetailModal(${post.id})" class="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-sm border border-slate-200 hover:shadow-md transition-all cursor-pointer">
-                        <div class="aspect-video w-full overflow-hidden bg-slate-100">
+                    <div onclick="openDetailModal(${post.id})" class="group relative cursor-pointer overflow-hidden rounded-xl bg-white dark:bg-slate-800 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl border border-slate-200 dark:border-slate-700">
+                        <div class="aspect-video w-full overflow-hidden bg-gray-200">
                             ${imageHTML}
                         </div>
-                        <div class="flex flex-1 flex-col p-4">
-                            <h3 class="mb-2 text-lg font-bold text-slate-900 line-clamp-1">${post.title}</h3>
-                            <p class="mb-4 text-sm text-slate-600 line-clamp-2 flex-1">${post.content}</p>
-                            <div class="flex items-center justify-between text-xs text-slate-500 mt-auto pt-3 border-t border-slate-100">
-                                <span>${post.author.split('@')[0]}</span>
-                                <span>${date}</span>
+                        <div class="p-4">
+                            <span class="text-xs font-bold text-primary mb-1 block">기계제어공학부</span>
+                            <h3 class="mb-1 text-lg font-bold text-slate-900 dark:text-slate-50 line-clamp-1">${post.title}</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">${post.content}</p>
+                            <div class="mt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-700 pt-3">
+                                <span class="text-xs font-medium text-slate-500 dark:text-slate-400">${post.author.split('@')[0]}</span>
+                                <span class="text-xs text-slate-400">${date}</span>
                             </div>
                         </div>
                     </div>`;
-                container.innerHTML += cardHTML;
+                container.insertAdjacentHTML('beforeend', cardHTML);
             });
         } catch (error) { 
-            console.error(error); 
+            console.error("게시물 로드 에러:", error); 
         }
     }
 
-    // 2. 모달 관련 함수들
+    // ==========================================
+    // 3. 상세 모달 (Detail)
+    // ==========================================
     function openDetailModal(id) {
         const post = allPosts.find(p => p.id === id);
         if (!post) return;
 
-        document.getElementById('modal-title').innerText = post.title;
-        document.getElementById('modal-content').innerText = post.content;
-        document.getElementById('modal-author').innerText = '작성자: ' + post.author.split('@')[0];
-        document.getElementById('modal-date').innerText = new Date(post.date).toLocaleDateString();
+        // 내용 채우기
+        const titleEl = document.getElementById('modal-title');
+        if(titleEl) titleEl.innerText = post.title;
+        
+        const contentEl = document.getElementById('modal-content');
+        if(contentEl) contentEl.innerText = post.content;
+        
+        const authorEl = document.getElementById('modal-author');
+        if(authorEl) authorEl.innerText = '작성자: ' + post.author.split('@')[0];
+        
+        const dateEl = document.getElementById('modal-date');
+        if(dateEl) dateEl.innerText = new Date(post.date).toLocaleDateString();
 
+        // 이미지 처리
         const imgContainer = document.getElementById('modal-image-container');
         const imgEl = document.getElementById('modal-image');
-        
-        if (post.image) {
+        if (post.image && imgEl && imgContainer) {
             imgEl.src = post.image;
             imgContainer.classList.remove('hidden');
-        } else {
+        } else if (imgContainer) {
             imgContainer.classList.add('hidden');
         }
 
-        document.getElementById('detail-modal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+        // 모달 보이기
+        const detailModal = document.getElementById('detail-modal');
+        if(detailModal) {
+            detailModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
     }
 
     function closeDetailModal() {
-        document.getElementById('detail-modal').classList.add('hidden');
+        const detailModal = document.getElementById('detail-modal');
+        if(detailModal) detailModal.classList.add('hidden');
         document.body.style.overflow = '';
     }
 
-    // 3. 로그인 및 업로드 기능
-    function checkLogin() {
-        const user = localStorage.getItem('user');
-        if (!user) { alert("로그인이 필요합니다."); return false; }
-        return user;
+    // ==========================================
+    // 4. 로그인 UI 및 기능
+    // ==========================================
+    function checkLoginUI() {
+        const savedUser = localStorage.getItem('user');
+        const uploadBtn = document.getElementById('show-upload-btn');
+        const headerLoginBtn = document.querySelector('header button'); 
+        
+        if (savedUser) {
+            // 로그인 상태: 버튼을 'My Page'로 변경
+            if(headerLoginBtn) {
+                 const textSpan = headerLoginBtn.querySelector('span:not(.material-symbols-outlined)') || headerLoginBtn;
+                 if(textSpan.innerText) textSpan.innerText = "My Page"; 
+                 
+                 headerLoginBtn.onclick = () => alert(`현재 로그인된 사용자: ${savedUser}`);
+            }
+            // 글쓰기 버튼 보이기
+            if(uploadBtn) uploadBtn.classList.remove('hidden');
+        }
     }
 
-    function updateLoginState() {
-        const user = localStorage.getItem('user');
-        const loginBtn = document.getElementById('login-btn');
+    // 로그인 버튼 클릭 시 메인 페이지로 이동 (로그인 모달이 메인에만 있기 때문)
+    function setupLoginRedirect() {
+        const savedUser = localStorage.getItem('user');
+        const headerLoginBtn = document.querySelector('header button');
         
-        if (user && loginBtn) {
-            // [수정됨] 로그아웃 버튼 대신 '마이페이지' 버튼으로 변경
-            loginBtn.innerHTML = '<span class="truncate">My Page</span>';
-            
-            // [수정됨] 클릭 시 로그아웃 함수(logout)가 아니라 페이지 이동 실행
-            loginBtn.onclick = function() {
-                window.location.href = 'mypage.html';
+        if (headerLoginBtn && !savedUser) {
+            headerLoginBtn.onclick = () => {
+                alert("로그인을 위해 메인 페이지로 이동합니다.");
+                window.location.href = 'index.html';
             };
         }
     }
 
-    function logout() {
-        localStorage.removeItem('user');
-        window.location.reload();
-    }
-
-    function convertToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    }
-
+    // ==========================================
+    // 5. 게시물 업로드 (Create)
+    // ==========================================
     function setupUploadModal() {
-        const modal = document.getElementById('upload-modal');
-        // [수정됨] HTML에 있는 'show-upload-btn' 아이디를 찾도록 수정
-        const btn = document.getElementById('show-upload-btn'); 
+        const uploadBtn = document.getElementById('show-upload-btn');
+        const uploadModal = document.getElementById('upload-modal');
         const uploadForm = document.getElementById('upload-form');
 
-        if (btn) btn.onclick = () => {
-            if (checkLogin()) modal.classList.remove('hidden');
-        };
+        // 모달 열기
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', () => {
+                if(uploadModal) uploadModal.classList.remove('hidden');
+            });
+        }
 
+        // 업로드 처리
         if (uploadForm) {
             uploadForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const savedUser = localStorage.getItem('user');
+                if (!savedUser) { alert("로그인이 필요합니다!"); return; }
+
                 const title = document.getElementById('post-title').value;
                 const content = document.getElementById('post-content').value;
                 const fileInput = document.getElementById('post-image');
                 
+                // 기계 페이지는 카테고리를 'machine'으로 고정
+                const category = 'machine'; 
+
                 let imageBase64 = null;
-                if (fileInput.files[0]) imageBase64 = await convertToBase64(fileInput.files[0]);
+                if (fileInput.files[0]) {
+                    try {
+                        imageBase64 = await convertToBase64(fileInput.files[0]);
+                    } catch(err) {
+                        alert("이미지 처리 중 오류가 발생했습니다.");
+                        return;
+                    }
+                }
 
                 try {
-                    await fetch('http://localhost:3000/api/posts', {
+                    // [수정] localhost 제거 -> /api/posts
+                    const response = await fetch('/api/posts', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
-                            title, content, author: savedUser, category: 'machine', image: imageBase64 
+                            title, content, author: savedUser, category: category, image: imageBase64 
                         })
                     });
-                    alert('업로드 완료!');
-                    modal.classList.add('hidden');
-                    loadPosts();
-                } catch (error) { alert('업로드 실패'); }
+
+                    if (response.ok) {
+                        alert('업로드 완료!');
+                        if(uploadModal) uploadModal.classList.add('hidden');
+                        uploadForm.reset();
+                        loadPosts(); // 목록 갱신
+                    } else {
+                        alert('서버 오류로 업로드에 실패했습니다.');
+                    }
+                } catch (error) { 
+                    console.error(error); 
+                    alert('네트워크 오류가 발생했습니다.'); 
+                }
             });
         }
     }
+
+    // 이미지 변환 도우미 함수
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    };
 </script>
 </body>
 </html>
