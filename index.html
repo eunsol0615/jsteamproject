@@ -230,10 +230,7 @@
     </div>
 </div>
 
-<button id="show-upload-btn" class="hidden fixed bottom-8 right-8 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-all z-[250] flex items-center gap-2 font-bold">
-    <span class="material-symbols-outlined">edit</span>
-    글쓰기
-</button>
+
     
     <script>
         // 데이터
@@ -255,7 +252,8 @@
         
         // [추가] 로그인 모달 열기
         function openLoginModal() {
-            if (!modal.classList.contains('hidden')) closeModal(); // 프로젝트 모달이 열려있으면 닫기
+            // modal 변수가 존재하는지 먼저 확인(&&)
+            if (modal && !modal.classList.contains('hidden')) closeModal(); 
             
             loginModal.classList.remove('hidden');
             setTimeout(() => {

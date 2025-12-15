@@ -1,9 +1,11 @@
-// server.js (SQLite 버전)
+// server.js (Render Disk 적용 버전)
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const fs = require('fs'); // [추가] 파일 시스템 모듈 가져오기
 const app = express();
+
 // 현재 폴더에 있는 html, css, js 파일들을 그대로 보여주라는 뜻입니다.
 app.use(express.static(__dirname));
 
@@ -11,21 +13,33 @@ app.use(express.static(__dirname));
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html'); 
 });
-const port = 3000;
 
 // 용량 및 CORS 설정
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
-// [중요] SQLite 데이터베이스 파일 생성 및 연결
-// 실행하면 프로젝트 폴더에 'database.sqlite' 파일이 자동으로 생깁니다.
-const dbPath = path.resolve(__dirname, 'database.sqlite');
+// [중요 수정 부분] SQLite 데이터베이스 파일 경로 설정
+// Render Disk 마운트 경로: /var/data
+const diskPath = '/var/data';
+let dbPath;
+
+// /var/data 폴더가 존재하면(Render 배포 환경) 거기를 사용하고,
+// 없으면(로컬 개발 환경) 현재 프로젝트 폴더를 사용합니다.
+if (fs.existsSync(diskPath)) {
+    console.log('📢 Render Disk 영구 저장소를 사용합니다.');
+    dbPath = path.join(diskPath, 'database.sqlite');
+} else {
+    console.log('📢 로컬 개발 환경 저장소를 사용합니다.');
+    dbPath = path.resolve(__dirname, 'database.sqlite');
+}
+
+// 데이터베이스 연결
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('데이터베이스 연결 실패:', err.message);
     } else {
-        console.log('SQLite 데이터베이스에 연결되었습니다.');
+        console.log(`SQLite 데이터베이스에 연결되었습니다. (경로: ${dbPath})`);
         initializeTables(); // 연결 성공하면 테이블 만들기
     }
 });
@@ -115,7 +129,8 @@ app.get('/api/posts', (req, res) => {
         res.json(rows);
     });
 });
-// [추가] 5. 게시물 삭제 기능 (DELETE /api/posts/:id)
+
+// 5. 게시물 삭제 기능 (DELETE /api/posts/:id)
 app.delete('/api/posts/:id', (req, res) => {
     const id = req.params.id;
     
@@ -130,7 +145,7 @@ app.delete('/api/posts/:id', (req, res) => {
     });
 });
 
-// ✅ 포트 번호만 적거나, '0.0.0.0'을 명시해야 합니다.
+// ✅ 포트 번호 설정
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
